@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080f16"/>
+      <stop offset="100%" stop-color="#161c24"/>
+    </linearGradient>
+    <linearGradient id="blueGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b6c4ff"/>
+      <stop offset="100%" stop-color="#0055ff"/>
+    </linearGradient>
+    <linearGradient id="orangeGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffb59c"/>
+      <stop offset="100%" stop-color="#ff5708"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="512" height="512" rx="100" fill="url(#bgGrad)"/>
+  
+  <!-- Subtle Grid Lines -->
+  <path d="M64 128 h384 M64 256 h384 M64 384 h384 M128 64 v384 M256 64 v384 M384 64 v384" stroke="#434656" stroke-width="1.5" stroke-opacity="0.3"/>
+  <rect x="32" y="32" width="448" height="448" rx="80" fill="none" stroke="#434656" stroke-width="2" stroke-opacity="0.4"/>
+
+  <!-- Isometric 3D Cube / Manufacturing Head -->
+  <g transform="translate(256, 235)" filter="url(#glow)">
+    <!-- Top Face -->
+    <polygon points="0,-110 100,-55 0,0 -100,-55" fill="#242a33" stroke="#b6c4ff" stroke-width="3.5"/>
+    
+    <!-- Left Face -->
+    <polygon points="-100,-55 0,0 0,110 -100,55" fill="#161c24" stroke="#b6c4ff" stroke-width="3.5"/>
+    
+    <!-- Right Face -->
+    <polygon points="0,0 100,-55 100,55 0,110" fill="#1a2028" stroke="#b6c4ff" stroke-width="3.5"/>
+
+    <!-- Inner Core & Laser Beam -->
+    <circle cx="0" cy="0" r="16" fill="#0055ff" stroke="#b6c4ff" stroke-width="3"/>
+    <line x1="0" y1="0" x2="0" y2="70" stroke="#ff5708" stroke-width="4" stroke-dasharray="4 3"/>
+    <circle cx="0" cy="70" r="6" fill="#ff5708"/>
+  </g>
+
+  <!-- Industrial Tech Ring & Markers -->
+  <circle cx="256" cy="235" r="140" fill="none" stroke="#0055ff" stroke-width="1.5" stroke-opacity="0.5" stroke-dasharray="8 6"/>
+  <circle cx="256" cy="235" r="160" fill="none" stroke="#ff5708" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="4 8"/>
+
+  <!-- Text Mark -->
+  <text x="256" y="440" font-family="'Space Grotesk', sans-serif" font-size="34" font-weight="bold" fill="#dde3ee" text-anchor="middle" letter-spacing="4">
+    PROTOTYP <tspan fill="#0055ff">3D</tspan>
+  </text>
+  <text x="256" y="465" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="bold" fill="#b6c4ff" text-anchor="middle" letter-spacing="2">
+    CAD INDUSTRIAL SYSTEM
+  </text>
+</svg>

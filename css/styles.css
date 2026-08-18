@@ -1,0 +1,168 @@
+/* PROTOTYP 3D - Custom Cyber-Industrial Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+:root {
+    --color-bg: #0e141b;
+    --color-surface: #18191D;
+    --color-surface-card: #1C1D21;
+    --color-primary: #b6c4ff;
+    --color-primary-container: #0055ff;
+    --color-secondary-container: #ff5708;
+    --color-error: #ffb4ab;
+    --color-outline: #434656;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #0e141b;
+    color: #dde3ee;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+/* CAD Grid Backgrounds matching exact templates */
+.cad-grid {
+    background-image: 
+        linear-gradient(to right, rgba(138, 144, 154, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(138, 144, 154, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+.tech-grid-bg {
+    background-image: 
+        linear-gradient(to right, rgba(138, 144, 154, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(138, 144, 154, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.bg-cyber-grid {
+    background-image: 
+        linear-gradient(to right, rgba(138, 144, 154, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(138, 144, 154, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+.cyber-grid {
+    background-image: radial-gradient(circle at center, rgba(138, 144, 154, 0.1) 1px, transparent 1px);
+    background-size: 16px 16px;
+}
+
+.login-bg {
+    background-color: #18191D;
+    background-image: radial-gradient(#434656 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+/* Glow Effects */
+.glow-effect {
+    box-shadow: 0 0 8px rgba(182, 196, 255, 0.1);
+}
+
+.glow-effect-active, .group:hover .glow-effect-active {
+    box-shadow: 0 0 16px rgba(182, 196, 255, 0.35);
+}
+
+.industrial-glow {
+    box-shadow: 0 0 10px rgba(255, 87, 8, 0.25);
+}
+
+.tech-glow {
+    box-shadow: 0 0 10px rgba(182, 196, 255, 0.4);
+}
+
+.glow-active {
+    box-shadow: 0 0 12px rgba(182, 196, 255, 0.25);
+}
+
+.isometric-glow:focus-within, .isometric-glow:hover {
+    box-shadow: 0 0 12px rgba(182, 196, 255, 0.4);
+    border-color: #b6c4ff;
+}
+
+/* Stepped Progress Bar */
+.progress-stepped::-webkit-progress-bar {
+    background-color: #2f353e;
+}
+.progress-stepped::-webkit-progress-value {
+    background-image: repeating-linear-gradient(-45deg, transparent, transparent 4px, #ff5708 4px, #ff5708 8px);
+}
+
+/* Ambient Scanline Animation - Exclusively inside login */
+@keyframes scanline {
+    0% { transform: translateY(-50px); }
+    100% { transform: translateY(100vh); }
+}
+.scanline-effect {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 2px;
+    background: linear-gradient(to bottom, transparent, rgba(182, 196, 255, 0.35), transparent);
+    animation: scanline 8s linear infinite;
+    pointer-events: none;
+    z-index: 30;
+}
+
+/* View Sections - Pure and reliable display toggling */
+.view-section {
+    display: none !important;
+}
+
+.view-section.active {
+    display: block !important;
+}
+
+.view-section.active.flex-view {
+    display: flex !important;
+}
+
+/* Custom input styling */
+.cyber-input:focus {
+    box-shadow: 0 0 8px 0 rgba(0, 85, 255, 0.4);
+    border-color: #0055ff !important;
+    outline: none;
+}
+
+/* Line animation in SVG */
+@keyframes drawLine {
+    to { stroke-dashoffset: 0; }
+}
+.animated-line {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawLine 1.8s ease-out forwards;
+}
+
+.animated-point {
+    opacity: 0;
+    animation: fadeIn 0.4s ease-out forwards;
+}
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+/* Print/PDF Export Optimization */
+@media print {
+    header, nav, .scanline-effect, #fab-button, button:not(.printable-action), .no-print, #toast-container {
+        display: none !important;
+    }
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+    .view-section.active {
+        display: block !important;
+    }
+    table, th, td {
+        border-color: #cccccc !important;
+        color: #000000 !important;
+    }
+}

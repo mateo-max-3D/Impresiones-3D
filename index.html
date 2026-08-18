@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>PROTOTYP 3D - Dashboard</title>
+    
+    <!-- PWA & Mobile Meta Tags -->
+    <link rel="manifest" href="manifest.json"/>
+    <meta name="theme-color" content="#0e141b"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+    <meta name="apple-mobile-web-app-title" content="PROTOTYP 3D"/>
+    <link rel="icon" type="image/png" href="icons/favicon.png"/>
+    <link rel="apple-touch-icon" href="icons/icon-192.png"/>
+
+    <!-- Tailwind CSS with EXACT Config from prompt -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#e3e6ff",
+                        "on-secondary-container": "#511500",
+                        "inverse-on-surface": "#2b3139",
+                        "on-secondary": "#5c1900",
+                        "secondary": "#ffb59c",
+                        "surface-container-highest": "#2f353e",
+                        "on-primary": "#002780",
+                        "outline-variant": "#434656",
+                        "secondary-fixed": "#ffdbcf",
+                        "on-surface-variant": "#c3c5d9",
+                        "primary": "#b6c4ff",
+                        "on-surface": "#dde3ee",
+                        "error": "#ffb4ab",
+                        "surface-container": "#1a2028",
+                        "secondary-fixed-dim": "#ffb59c",
+                        "surface-container-low": "#161c24",
+                        "on-primary-fixed-variant": "#0039b3",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#822700",
+                        "on-background": "#dde3ee",
+                        "surface-variant": "#2f353e",
+                        "tertiary-fixed-dim": "#c7c6cb",
+                        "tertiary-container": "#67676c",
+                        "primary-container": "#0055ff",
+                        "on-tertiary-fixed-variant": "#46464b",
+                        "primary-fixed-dim": "#b6c4ff",
+                        "on-error": "#690005",
+                        "on-tertiary-container": "#e8e6ec",
+                        "surface-dim": "#0e141b",
+                        "surface-container-high": "#242a33",
+                        "surface-container-lowest": "#080f16",
+                        "background": "#0e141b",
+                        "inverse-surface": "#dde3ee",
+                        "primary-fixed": "#dce1ff",
+                        "on-tertiary-fixed": "#1a1b1f",
+                        "on-primary-fixed": "#001551",
+                        "error-container": "#93000a",
+                        "surface-tint": "#b6c4ff",
+                        "surface-bright": "#343a42",
+                        "tertiary": "#c7c6cb",
+                        "tertiary-fixed": "#e3e2e7",
+                        "surface": "#0e141b",
+                        "on-tertiary": "#2f3034",
+                        "inverse-primary": "#004dea",
+                        "secondary-container": "#ff5708",
+                        "outline": "#8d90a2",
+                        "on-secondary-fixed": "#390c00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-unit": "4px",
+                        "margin-mobile": "16px",
+                        "base": "8px",
+                        "margin-desktop": "40px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "display-lg": ["Space Grotesk"],
+                        "headline-md": ["Space Grotesk"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-lg": ["Space Grotesk"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-lg": ["Inter"],
+                        "headline-lg-mobile": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "data-mono": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts & Material Symbols -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <!-- Custom Cyber Styles -->
+    <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-md relative">
+    
+    <!-- Toast Alert Notification Container -->
+    <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"></div>
+
+    <!-- ========================================================================= -->
+    <!-- TOP APP BAR (HEADER - No icon beside Logo, Role: ADMINISTRADOR) -->
+    <!-- ========================================================================= -->
+    <header id="main-header" class="hidden docked full-width top-0 border-b border-outline-variant/20 flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-16 bg-surface dark:bg-surface fixed top-0 left-0 z-50 [background-size:10px_10px] bg-[radial-gradient(#434656_1px,transparent_1px)]">
+        <div class="flex items-center gap-4">
+            <h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold tracking-tighter text-on-surface dark:text-on-surface cursor-pointer" onclick="appRouter.navigate('dashboard')">
+                PROTOTYP 3D
+            </h1>
+        </div>
+
+        <!-- Desktop Navigation Items -->
+        <nav class="hidden md:flex items-center gap-6">
+            <button data-nav="dashboard" class="nav-link font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors hover:bg-primary/10 px-3 py-1.5 rounded">DASHBOARD</button>
+            <button data-nav="ingresos" class="nav-link font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors hover:bg-primary/10 px-3 py-1.5 rounded">INGRESOS</button>
+            <button data-nav="gastos" class="nav-link font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors hover:bg-primary/10 px-3 py-1.5 rounded">GASTOS</button>
+            <button data-nav="estado" class="nav-link font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors hover:bg-primary/10 px-3 py-1.5 rounded">ESTADO</button>
+            <button data-nav="flujo" class="nav-link font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors hover:bg-primary/10 px-3 py-1.5 rounded">FLUJO</button>
+        </nav>
+
+        <!-- Right User & Action Controls -->
+        <div class="flex items-center gap-3">
+            <button id="btn-install-pwa" class="hidden text-xs bg-primary/10 hover:bg-primary/20 text-primary border border-primary/40 px-3 py-1.5 rounded-full font-label-caps flex items-center gap-1.5 transition-all active:scale-95 shadow-[0_0_8px_rgba(182,196,255,0.2)]">
+                <span class="material-symbols-outlined text-[16px]">download_for_offline</span>
+                <span class="hidden sm:inline">INSTALAR PWA</span>
+            </button>
+
+            <span id="btn-notifications" class="material-symbols-outlined text-primary dark:text-primary hover:bg-surface-variant/10 p-2 rounded cursor-pointer relative" title="Notificaciones">
+                notifications
+                <span class="w-2 h-2 rounded-full bg-secondary-container absolute top-2 right-2 animate-pulse"></span>
+            </span>
+
+            <!-- Active User Display & Logout -->
+            <div id="user-pill" class="flex items-center gap-2 bg-surface-container-high border border-outline-variant/40 py-1 px-3 rounded-full">
+                <div class="w-6 h-6 rounded-full bg-primary-container text-on-primary font-bold text-xs flex items-center justify-center font-data-mono" id="user-avatar">
+                    M
+                </div>
+                <div class="flex flex-col text-left">
+                    <span id="user-name-display" class="font-data-mono text-xs font-bold text-on-surface leading-tight">Mateo</span>
+                    <span id="user-role-display" class="font-label-caps text-[9px] text-primary leading-none uppercase">ADMINISTRADOR</span>
+                </div>
+                <button id="btn-logout" title="Cerrar Sesión" class="ml-2 text-outline hover:text-error transition-colors p-1">
+                    <span class="material-symbols-outlined text-[16px]">logout</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- 1. LOGIN VIEW (Exact interface from JSON/Prompt - Scanline only here, NO suggestions) -->
+    <!-- ========================================================================= -->
+    <section id="view-login" class="view-section flex-view items-center justify-center text-on-surface min-h-screen p-margin-mobile md:p-margin-desktop relative overflow-hidden login-bg active">
+        <!-- Ambient Scanline - Only inside login -->
+        <div class="scanline-effect"></div>
+
+        <!-- Coordinate Markers (Decorative) -->
+        <div class="absolute top-8 left-8 font-data-mono text-data-mono text-outline-variant select-none hidden md:block">
+            X: 0.000<br>Y: 0.000<br>Z: 1.000
+        </div>
+        <div class="absolute bottom-8 right-8 font-data-mono text-data-mono text-outline-variant select-none hidden md:block">
+            SYS.AUTH.REQ
+        </div>
+
+        <!-- Main Login Container -->
+        <main class="w-full max-w-md relative z-10">
+            <!-- Isometric Modal Overlay Effect -->
+            <div class="absolute inset-0 bg-surface-container/60 backdrop-blur-xl border border-outline-variant/30 rounded-lg -z-10 shadow-2xl"></div>
+            
+            <div class="p-8 md:p-10 flex flex-col gap-8">
+                <!-- Header Section -->
+                <header class="flex flex-col items-center gap-2 text-center relative">
+                    <div class="absolute top-0 left-0 w-full h-[1px] bg-outline-variant/30"></div>
+                    <div class="absolute bottom-0 left-0 w-full h-[1px] bg-outline-variant/30"></div>
+                    <h1 class="font-display-lg text-display-lg text-on-surface tracking-tighter pt-4">
+                        PROTOTYP <span class="text-primary-container">3D</span>
+                    </h1>
+                    <p class="font-data-mono text-data-mono text-on-surface-variant pb-4 uppercase tracking-widest">
+                        Portal de Acceso
+                    </p>
+                </header>
+
+                <!-- Feedback Banner -->
+                <div id="login-error" class="hidden p-3 bg-error-container/30 border border-error text-error text-xs font-data-mono rounded flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">error</span>
+                    <span id="login-error-text">Credenciales inválidas. Verifique sus datos.</span>
+                </div>
+
+                <!-- Login Form (NO SUGGESTED LOGINS) -->
+                <form id="form-login" class="flex flex-col gap-6" method="POST">
+                    <!-- User Field -->
+                    <div class="flex flex-col gap-2 relative group">
+                        <label class="font-label-caps text-label-caps text-on-surface-variant group-focus-within:text-primary transition-colors" for="login-email">
+                            Usuario
+                        </label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant group-focus-within:text-primary transition-colors text-lg" style="font-variation-settings: 'FILL' 0;">
+                                person
+                            </span>
+                            <input class="cyber-input w-full bg-surface-dim border border-outline/50 rounded text-on-surface font-body-md text-body-md pl-10 pr-4 py-3 placeholder:text-outline-variant/50 transition-all duration-200" id="login-email" name="email" placeholder="Usuario" required type="text" autocomplete="username"/>
+                        </div>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="flex flex-col gap-2 relative group">
+                        <div class="flex justify-between items-end">
+                            <label class="font-label-caps text-label-caps text-on-surface-variant group-focus-within:text-primary transition-colors" for="login-password">
+                                Clave de Acceso (Contraseña)
+                            </label>
+                        </div>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant group-focus-within:text-primary transition-colors text-lg" style="font-variation-settings: 'FILL' 0;">
+                                lock
+                            </span>
+                            <input class="cyber-input w-full bg-surface-dim border border-outline/50 rounded text-on-surface font-body-md text-body-md pl-10 pr-4 py-3 placeholder:text-outline-variant/50 transition-all duration-200" id="login-password" name="password" placeholder="••••••••" required type="password" autocomplete="current-password"/>
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    <button class="mt-4 w-full bg-primary-container text-on-primary-container font-label-caps text-label-caps py-4 rounded relative overflow-hidden group hover:bg-inverse-primary transition-colors duration-300" type="submit">
+                        <div class="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                        <span class="relative z-10 flex items-center justify-center gap-2">
+                            INGRESAR
+                            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">
+                                arrow_forward
+                            </span>
+                        </span>
+                    </button>
+                </form>
+
+                <!-- Decorative footer -->
+                <div class="mt-4 pt-4 border-t border-outline-variant/20 flex justify-between items-center text-outline-variant/50 font-data-mono text-xs">
+                    <span>V 2.4.1</span>
+                    <span>SECURE_CONNECTION</span>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 2. DASHBOARD VIEW (Exact interface from JSON/Prompt) -->
+    <!-- ========================================================================= -->
+    <section id="view-dashboard" class="view-section bg-background text-on-background min-h-screen font-body-md cad-grid relative pb-[80px] md:pb-0">
+        <!-- Main Content Canvas -->
+        <main class="pt-[80px] px-margin-mobile md:px-margin-desktop max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-gutter pb-8 relative z-10">
+            
+            <!-- Total Balance Technical Card -->
+            <div class="md:col-span-12 lg:col-span-8 bg-[#1C1D21] border border-outline/20 rounded-lg p-6 relative overflow-hidden glow-effect group hover:glow-effect-active transition-all duration-300">
+                <div class="absolute top-0 right-0 p-2 opacity-30 font-label-caps text-label-caps text-tertiary">X:12 Y:45 Z:00</div>
+                <p class="font-label-caps text-label-caps text-on-surface-variant mb-2">TOTAL BALANCE (USD)</p>
+                <h2 id="dash-total-balance" class="font-display-lg text-display-lg text-primary tracking-tight font-data-mono mb-6">$142,890.50</h2>
+                <div class="grid grid-cols-2 gap-4 border-t border-outline/20 pt-4">
+                    <div>
+                        <p class="font-label-caps text-label-caps text-on-surface-variant mb-1 flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[16px] text-[#4ADE80]">arrow_upward</span> INCOME (30D)
+                        </p>
+                        <p id="dash-income-30d" class="font-data-mono text-data-mono text-on-surface">$24,500.00</p>
+                    </div>
+                    <div>
+                        <p class="font-label-caps text-label-caps text-on-surface-variant mb-1 flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[16px] text-error">arrow_downward</span> EXPENSES (30D)
+                        </p>
+                        <p id="dash-expenses-30d" class="font-data-mono text-data-mono text-on-surface">$8,240.00</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="md:col-span-12 lg:col-span-4 flex flex-col gap-4">
+                <button onclick="openModal('modal-add-income')" class="w-full bg-secondary-container hover:bg-secondary-container/90 text-on-secondary-container font-label-caps text-label-caps py-4 rounded-DEFAULT industrial-glow transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">add</span> ADD INCOME
+                </button>
+                <button onclick="openModal('modal-add-expense')" class="w-full border border-outline hover:border-primary text-on-surface hover:text-primary font-label-caps text-label-caps py-4 rounded-DEFAULT transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">remove</span> ADD EXPENSE
+                </button>
+                <div class="bg-[#1C1D21] border border-outline/20 rounded-lg p-4 flex-1 flex flex-col justify-center">
+                    <p class="font-label-caps text-label-caps text-on-surface-variant mb-2">SYSTEM STATUS</p>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                        <span class="font-data-mono text-data-mono text-primary">ALL SYSTEMS NOMINAL</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mini Charts Placeholder -->
+            <div class="md:col-span-12 bg-[#1C1D21] border border-outline/20 rounded-lg p-6 relative">
+                <div class="absolute top-0 right-0 p-2 opacity-30 font-label-caps text-label-caps text-tertiary">Y-AXIS RENDER</div>
+                <h3 class="font-headline-md text-headline-md text-on-surface mb-4">Financial Flow</h3>
+                <div id="financial-flow-bars-container" class="h-48 w-full border-b border-l border-outline/20 relative flex items-end justify-around pb-2">
+                    <!-- Dynamic Bars -->
+                </div>
+            </div>
+
+            <!-- Recent Activity Table -->
+            <div class="md:col-span-12 bg-[#1C1D21] border border-outline/20 rounded-lg overflow-hidden">
+                <div class="p-4 border-b border-outline/20 flex justify-between items-center bg-surface-variant/30">
+                    <h3 class="font-headline-md text-headline-md text-on-surface">Recent Activity</h3>
+                    <button onclick="appRouter.navigate('ingresos')" class="font-label-caps text-label-caps text-primary hover:text-primary-fixed">VIEW ALL</button>
+                </div>
+                <div class="w-full">
+                    <!-- Table Header -->
+                    <div class="grid grid-cols-4 gap-4 p-4 border-b border-outline/20 bg-surface/50 font-label-caps text-label-caps text-on-surface-variant hidden md:grid">
+                        <div>TRANSACTION ID</div>
+                        <div>DATE</div>
+                        <div>AMOUNT</div>
+                        <div>STATUS</div>
+                    </div>
+                    <!-- Table Rows -->
+                    <div id="dash-recent-activity-table">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border-b border-outline/10 hover:bg-surface-variant/10 transition-colors items-center">
+                            <div class="font-data-mono text-data-mono text-on-surface truncate">TXN-89A2</div>
+                            <div class="font-data-mono text-data-mono text-on-surface-variant text-sm">2023-10-27 14:32</div>
+                            <div class="font-data-mono text-data-mono text-primary">+$1,200.00</div>
+                            <div><span class="inline-block px-2 py-1 bg-primary/10 border border-primary text-primary font-label-caps text-[10px] rounded">COMPLETED</span></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border-b border-outline/10 hover:bg-surface-variant/10 transition-colors items-center">
+                            <div class="font-data-mono text-data-mono text-on-surface truncate">TXN-42B9</div>
+                            <div class="font-data-mono text-data-mono text-on-surface-variant text-sm">2023-10-26 09:15</div>
+                            <div class="font-data-mono text-data-mono text-error">-$450.00</div>
+                            <div><span class="inline-block px-2 py-1 bg-error/10 border border-error text-error font-label-caps text-[10px] rounded">COMPLETED</span></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border-b border-outline/10 hover:bg-surface-variant/10 transition-colors items-center">
+                            <div class="font-data-mono text-data-mono text-on-surface truncate">TXN-77C1</div>
+                            <div class="font-data-mono text-data-mono text-on-surface-variant text-sm">2023-10-25 16:45</div>
+                            <div class="font-data-mono text-data-mono text-primary">+$3,400.00</div>
+                            <div><span class="inline-block px-2 py-1 bg-secondary-container/10 border border-secondary-container text-secondary-container font-label-caps text-[10px] rounded">PROCESSING</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 3. INGRESOS VIEW (Exact interface from JSON/Prompt) -->
+    <!-- ========================================================================= -->
+    <section id="view-ingresos" class="view-section bg-background text-on-surface font-body-md min-h-screen pb-[80px] md:pb-0 relative cyber-grid">
+        <!-- Main Content Canvas -->
+        <main class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-8 grid grid-cols-1 md:grid-cols-12 gap-gutter relative pt-[80px]">
+            <!-- Axis labels (aesthetic) -->
+            <div class="hidden lg:block absolute top-20 left-4 text-outline font-data-mono text-[10px]">Y_AXIS_01</div>
+            <div class="hidden lg:block absolute bottom-4 right-4 text-outline font-data-mono text-[10px]">X_AXIS_01</div>
+
+            <!-- Header Section: Total Income & Action -->
+            <section class="col-span-1 md:col-span-12 flex flex-col md:flex-row justify-between items-start md:items-end mb-8 dim-line-x pb-8">
+                <div>
+                    <p class="font-label-caps text-label-caps text-on-surface-variant mb-2">INGRESOS TOTALES (MES ACTUAL)</p>
+                    <h1 id="ingresos-total-display" class="font-display-lg text-display-lg text-primary tracking-tight">$ 24,500.00</h1>
+                </div>
+                <button onclick="openModal('modal-add-income')" class="mt-6 md:mt-0 bg-primary text-on-primary font-label-caps text-label-caps px-6 py-3 rounded hover:bg-primary-container transition-colors glow-active flex items-center gap-2 active:scale-95 duration-150">
+                    <span class="material-symbols-outlined">add</span>
+                    AÑADIR INGRESO
+                </button>
+            </section>
+
+            <!-- Breakdown Section / Cajón de Ingresos -->
+            <section class="col-span-1 md:col-span-12 bg-surface-container border border-primary/30 rounded-xl p-6 mb-8 shadow-[0_0_15px_rgba(182,196,255,0.1)]">
+                <div class="flex items-center gap-2 mb-6">
+                    <span class="material-symbols-outlined text-primary">add_card</span>
+                    <h2 class="font-headline-md text-headline-md text-on-surface">Cajón de Ingresos</h2>
+                </div>
+                <form id="form-inline-income" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                    <div class="flex flex-col gap-2">
+                        <label class="font-label-caps text-[10px] text-on-surface-variant uppercase">Concepto</label>
+                        <input id="inline-inc-concept" required class="bg-background border border-outline-variant/20 rounded px-4 py-2 text-on-surface focus:border-primary outline-none transition-colors" placeholder="Ej: Venta Prototipo X" type="text"/>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="font-label-caps text-[10px] text-on-surface-variant uppercase">Monto ($)</label>
+                        <input id="inline-inc-amount" required step="0.01" min="0.01" class="bg-background border border-outline-variant/20 rounded px-4 py-2 text-on-surface focus:border-primary outline-none transition-colors" placeholder="0.00" type="number"/>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="font-label-caps text-[10px] text-on-surface-variant uppercase">Categoría</label>
+                        <select id="inline-inc-category" class="bg-background border border-outline-variant/20 rounded px-4 py-2 text-on-surface focus:border-primary outline-none transition-colors">
+                            <option value="Impresión 3D">Impresión 3D</option>
+                            <option value="Filamentos">Filamentos</option>
+                            <option value="Diseño">Diseño</option>
+                            <option value="Otros">Otros</option>
+                        </select>
+                    </div>
+                    <button class="bg-primary text-on-primary font-label-caps text-label-caps py-2.5 rounded hover:bg-primary-container transition-all glow-active active:scale-95" type="submit">
+                        REGISTRAR INGRESO
+                    </button>
+                </form>
+            </section>
+
+            <!-- Desglose por Servicio -->
+            <section class="col-span-1 md:col-span-4 flex flex-col gap-4">
+                <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Desglose por Servicio</h2>
+                
+                <div id="income-categories-container" class="flex flex-col gap-4">
+                    <div class="bg-surface-container border border-outline-variant/20 rounded p-4 relative group hover:border-primary/50 transition-colors">
+                        <div class="absolute top-0 right-0 w-8 h-8 flex items-center justify-center opacity-20 group-hover:opacity-100 transition-opacity">
+                            <span class="material-symbols-outlined text-primary text-[16px]">3d_rotation</span>
+                        </div>
+                        <p class="font-label-caps text-label-caps text-on-surface-variant mb-1">IMPRESIÓN 3D</p>
+                        <p class="font-headline-md text-headline-md text-on-surface">$ 15,200.00</p>
+                        <div class="w-full bg-surface mt-3 h-1 flex">
+                            <div class="bg-primary h-full" style="width: 62%;"></div>
+                        </div>
+                    </div>
+                    <div class="bg-surface-container border border-outline-variant/20 rounded p-4 relative group hover:border-primary/50 transition-colors">
+                        <div class="absolute top-0 right-0 w-8 h-8 flex items-center justify-center opacity-20 group-hover:opacity-100 transition-opacity">
+                            <span class="material-symbols-outlined text-primary text-[16px]">inventory_2</span>
+                        </div>
+                        <p class="font-label-caps text-label-caps text-on-surface-variant mb-1">FILAMENTOS (VENTA)</p>
+                        <p class="font-headline-md text-headline-md text-on-surface">$ 5,100.00</p>
+                        <div class="w-full bg-surface mt-3 h-1 flex">
+                            <div class="bg-primary h-full" style="width: 21%;"></div>
+                        </div>
+                    </div>
+                    <div class="bg-surface-container border border-outline-variant/20 rounded p-4 relative group hover:border-primary/50 transition-colors">
+                        <div class="absolute top-0 right-0 w-8 h-8 flex items-center justify-center opacity-20 group-hover:opacity-100 transition-opacity">
+                            <span class="material-symbols-outlined text-primary text-[16px]">design_services</span>
+                        </div>
+                        <p class="font-label-caps text-label-caps text-on-surface-variant mb-1">SERVICIOS DE DISEÑO</p>
+                        <p class="font-headline-md text-headline-md text-on-surface">$ 4,200.00</p>
+                        <div class="w-full bg-surface mt-3 h-1 flex">
+                            <div class="bg-primary h-full" style="width: 17%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Activity Table -->
+            <section class="col-span-1 md:col-span-8 bg-surface-container border border-outline-variant/20 rounded p-6">
+                <h2 class="font-headline-md text-headline-md text-on-surface mb-6 dim-line-x pb-4">Actividad Reciente</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left font-data-mono text-data-mono">
+                        <thead>
+                            <tr class="text-on-surface-variant border-b border-outline-variant/20">
+                                <th class="py-3 font-normal">ID TRANSACCIÓN</th>
+                                <th class="py-3 font-normal">FECHA</th>
+                                <th class="py-3 font-normal">TIPO</th>
+                                <th class="py-3 font-normal text-right">MONTO</th>
+                                <th class="py-3 font-normal text-center">ESTADO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-income-activity">
+                            <tr class="border-b border-outline-variant/20 hover:bg-primary/5 transition-colors group cursor-pointer">
+                                <td class="py-4 text-primary">TRX-8921-A</td>
+                                <td class="py-4">24 OCT 2023</td>
+                                <td class="py-4">Impresión SLA</td>
+                                <td class="py-4 text-right">$ 1,250.00</td>
+                                <td class="py-4 flex justify-center">
+                                    <span class="bg-primary/10 border border-primary text-primary px-2 py-1 rounded text-[10px] uppercase tracking-wider">COMPLETADO</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-outline-variant/20 hover:bg-primary/5 transition-colors group cursor-pointer">
+                                <td class="py-4 text-primary">TRX-8922-B</td>
+                                <td class="py-4">23 OCT 2023</td>
+                                <td class="py-4">Venta PLA (Lote)</td>
+                                <td class="py-4 text-right">$ 850.00</td>
+                                <td class="py-4 flex justify-center">
+                                    <span class="bg-primary/10 border border-primary text-primary px-2 py-1 rounded text-[10px] uppercase tracking-wider">COMPLETADO</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-outline-variant/20 hover:bg-primary/5 transition-colors group cursor-pointer">
+                                <td class="py-4 text-primary">TRX-8923-C</td>
+                                <td class="py-4">22 OCT 2023</td>
+                                <td class="py-4">Modelado CAD</td>
+                                <td class="py-4 text-right">$ 2,100.00</td>
+                                <td class="py-4 flex justify-center">
+                                    <span class="bg-secondary-container/10 border border-secondary-container text-secondary-container px-2 py-1 rounded text-[10px] uppercase tracking-wider">PROCESANDO</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-outline-variant/20 hover:bg-primary/5 transition-colors group cursor-pointer">
+                                <td class="py-4 text-primary">TRX-8924-A</td>
+                                <td class="py-4">20 OCT 2023</td>
+                                <td class="py-4">Impresión FDM</td>
+                                <td class="py-4 text-right">$ 340.00</td>
+                                <td class="py-4 flex justify-center">
+                                    <span class="bg-primary/10 border border-primary text-primary px-2 py-1 rounded text-[10px] uppercase tracking-wider">COMPLETADO</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 4. GASTOS Y STOCK VIEW (Exact interface from JSON/Prompt) -->
+    <!-- ========================================================================= -->
+    <section id="view-gastos" class="view-section font-body-md text-body-md min-h-screen flex flex-col pb-24 md:pb-0 pt-[80px]">
+        <main class="flex-1 w-full max-w-[1280px] mx-auto p-margin-mobile md:p-margin-desktop grid grid-cols-1 md:grid-cols-12 gap-gutter md:gap-y-8">
+            <!-- Summary Dashboard -->
+            <section class="md:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-base md:gap-gutter">
+                <div class="bg-surface-container p-4 border border-outline-variant/20 relative overflow-hidden group hover:border-primary/50 transition-colors">
+                    <div class="absolute top-2 right-2 text-outline-variant/40 font-label-caps text-[10px]">X.01</div>
+                    <h2 class="font-label-caps text-label-caps text-on-surface-variant mb-2 uppercase">Total Gastos (Mes)</h2>
+                    <div id="gastos-total-display" class="font-display-lg text-display-lg text-on-surface font-data-mono tech-glow inline-block">$4,250.00</div>
+                </div>
+                <div class="bg-surface-container p-4 border border-outline-variant/20 relative overflow-hidden group hover:border-primary/50 transition-colors">
+                    <div class="absolute top-2 right-2 text-outline-variant/40 font-label-caps text-[10px]">Y.02</div>
+                    <h2 class="font-label-caps text-label-caps text-on-surface-variant mb-2 uppercase">Presupuesto Consumido</h2>
+                    <div class="flex items-end gap-2 mb-2">
+                        <span id="gastos-budget-pct" class="font-headline-md text-headline-md text-secondary-container font-data-mono">85%</span>
+                        <span class="font-data-mono text-data-mono text-outline mb-1">/ $5000</span>
+                    </div>
+                    <progress id="gastos-budget-bar" class="w-full h-2 progress-stepped rounded-none" max="100" value="85"></progress>
+                </div>
+                <div class="bg-surface-container p-4 border border-outline-variant/20 relative overflow-hidden group hover:border-primary/50 transition-colors">
+                    <div class="absolute top-2 right-2 text-outline-variant/40 font-label-caps text-[10px]">Z.03</div>
+                    <h2 class="font-label-caps text-label-caps text-on-surface-variant mb-2 uppercase">Alerta Crítica</h2>
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-secondary-container" style="font-variation-settings: 'FILL' 1;">warning</span>
+                        <span class="font-body-md text-body-md text-on-surface">Mantenimiento Extrusor Excedido</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Content Area -->
+            <div class="md:col-span-8 flex flex-col gap-base">
+                <div class="flex justify-between items-end border-b border-outline-variant/20 pb-2 mb-2">
+                    <h3 class="font-headline-md text-headline-md text-on-surface">Desglose Técnico</h3>
+                    <div class="flex gap-2">
+                        <button class="border border-outline-variant text-on-surface-variant px-3 py-1 font-label-caps text-label-caps uppercase hover:bg-surface-variant transition-colors">Mes</button>
+                        <button class="bg-primary text-on-primary px-3 py-1 font-label-caps text-label-caps uppercase tech-glow">Semana</button>
+                    </div>
+                </div>
+                
+                <!-- Expense List -->
+                <div id="gastos-stock-list" class="flex flex-col gap-2">
+                    <!-- Item 1: Filaments -->
+                    <div onclick="selectExpenseItem('TX-9982-F')" class="bg-surface-container-low border border-outline-variant/20 p-3 flex flex-col md:flex-row justify-between md:items-center gap-3 hover:bg-surface-container transition-colors cursor-pointer group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-surface-variant flex items-center justify-center border border-outline-variant/30">
+                                <span class="material-symbols-outlined text-primary">precision_manufacturing</span>
+                            </div>
+                            <div>
+                                <div class="font-body-lg text-body-lg text-on-surface font-medium">Filamentos PLA/PETG</div>
+                                <div class="font-label-caps text-label-caps text-outline uppercase mt-1">Lote #492-A | Proveedor: PolyMaker</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col md:items-end">
+                            <div class="font-data-mono text-data-mono text-primary group-hover:tech-glow transition-all">$1,200.00</div>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="font-label-caps text-label-caps text-outline uppercase">Uso: 60%</span>
+                                <div class="w-16 h-1 bg-surface-variant overflow-hidden">
+                                    <div class="h-full bg-primary" style="width: 60%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Item 2: Stock Medio -->
+                    <div onclick="selectExpenseItem('STK-0552-M')" class="bg-surface-container-low border border-outline-variant/20 p-3 flex flex-col md:flex-row justify-between md:items-center gap-3 hover:bg-surface-container transition-colors cursor-pointer group border-l-2 border-l-secondary-container">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-surface-variant flex items-center justify-center border border-outline-variant/30">
+                                <span class="material-symbols-outlined text-secondary-container">inventory</span>
+                            </div>
+                            <div>
+                                <div class="font-body-lg text-body-lg text-on-surface font-medium">Stock Medio</div>
+                                <div class="font-label-caps text-label-caps text-outline uppercase mt-1">Resina Estándar | 5000 ML</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col md:items-end">
+                            <div class="font-data-mono text-data-mono text-secondary-container group-hover:text-error transition-all">25 Unidades</div>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="font-label-caps text-label-caps text-outline uppercase">Nivel: 50%</span>
+                                <progress class="w-16 h-1 progress-stepped rounded-none" max="100" value="50"></progress>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Item 3: Stock Mínimo -->
+                    <div onclick="selectExpenseItem('STK-0104-C')" class="bg-surface-container-low border border-outline-variant/20 p-3 flex flex-col md:flex-row justify-between md:items-center gap-3 hover:bg-surface-container transition-colors cursor-pointer group border-l-2 border-l-error">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-surface-variant flex items-center justify-center border border-outline-variant/30">
+                                <span class="material-symbols-outlined text-error">warning</span>
+                            </div>
+                            <div>
+                                <div class="font-body-lg text-body-lg text-on-surface font-medium">Stock Mínimo</div>
+                                <div class="font-label-caps text-label-caps text-outline uppercase mt-1">Boquillas 0.4mm | Reabastecer</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col md:items-end">
+                            <div class="font-data-mono text-data-mono text-error group-hover:tech-glow transition-all">3 Unidades</div>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="bg-error/20 text-error px-1.5 py-0.5 border border-error/50 font-label-caps text-[10px] uppercase">Crítico</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Item 4: Compras de Materiales del Mes -->
+                    <div onclick="selectExpenseItem('ORD-8812-B')" class="bg-surface-container-low border border-outline-variant/20 p-3 flex flex-col md:flex-row justify-between md:items-center gap-3 hover:bg-surface-container transition-colors cursor-pointer group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-surface-variant flex items-center justify-center border border-outline-variant/30">
+                                <span class="material-symbols-outlined text-primary">shopping_cart</span>
+                            </div>
+                            <div>
+                                <div class="font-body-lg text-body-lg text-on-surface font-medium">Compras de Materiales del Mes</div>
+                                <div class="font-label-caps text-label-caps text-outline uppercase mt-1">Varios Proveedores</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col md:items-end">
+                            <div class="font-data-mono text-data-mono text-primary group-hover:tech-glow transition-all">$3,450.00</div>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="bg-surface-variant text-outline px-1.5 py-0.5 border border-outline-variant font-label-caps text-[10px] uppercase">12 Órdenes</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Details -->
+            <aside class="md:col-span-4 flex flex-col gap-base">
+                <div class="bg-surface-container border border-outline-variant/20 p-4 h-full relative">
+                    <div class="absolute top-0 right-0 p-2">
+                        <span class="material-symbols-outlined text-outline-variant cursor-pointer hover:text-primary transition-colors">more_vert</span>
+                    </div>
+                    <div class="font-label-caps text-label-caps text-primary uppercase mb-4 tracking-widest border-b border-outline-variant/20 pb-2 inline-block">Inspector de Detalles</div>
+                    <div class="w-full h-48 bg-surface-variant border border-outline-variant/30 mb-4 relative flex items-center justify-center bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCI+PHBhdGggZD0iTTEwIDBMMCAxMEg1TDEwIDVWMEoiIGZpbGw9IiM0MzQ2NTYiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PC9zdmc+')]">
+                        <span class="material-symbols-outlined text-outline text-4xl opacity-50">receipt_long</span>
+                        <div class="absolute bottom-2 right-2 font-label-caps text-[10px] text-outline">SCAN.RAW</div>
+                    </div>
+                    <h4 id="inspector-title" class="font-headline-md text-headline-md text-on-surface mb-1">Filamentos PLA/PETG</h4>
+                    <div id="inspector-amount" class="font-data-mono text-data-mono text-primary text-xl mb-4">$1,200.00</div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between border-b border-outline-variant/10 pb-1">
+                            <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">ID Transacción</span>
+                            <span id="inspector-id" class="font-data-mono text-data-mono text-on-surface">TX-9982-F</span>
+                        </div>
+                        <div class="flex justify-between border-b border-outline-variant/10 pb-1">
+                            <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Categoría</span>
+                            <span id="inspector-category" class="font-data-mono text-data-mono text-on-surface">Materiales</span>
+                        </div>
+                        <div class="flex justify-between border-b border-outline-variant/10 pb-1">
+                            <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Fecha</span>
+                            <span id="inspector-date" class="font-data-mono text-data-mono text-on-surface">2023.10.24 14:32</span>
+                        </div>
+                    </div>
+                    <button onclick="downloadInvoiceSimulated()" class="w-full mt-6 border border-primary text-primary hover:bg-primary/10 py-2 font-label-caps text-label-caps uppercase transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-sm">download</span>
+                        Descargar Factura
+                    </button>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Floating Action Button -->
+        <button id="fab-button" onclick="openModal('modal-add-expense')" class="fixed bottom-20 md:bottom-8 right-4 md:right-8 w-14 h-14 bg-primary text-on-primary rounded-none flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all tech-glow z-40" style="clip-path: polygon(25% 0%, 100% 0, 100% 75%, 75% 100%, 0 100%, 0% 25%);">
+            <span class="material-symbols-outlined text-2xl font-bold">add</span>
+        </button>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 5. ESTADO DE RESULTADOS VIEW (Exact interface from JSON/Prompt) -->
+    <!-- ========================================================================= -->
+    <section id="view-estado" class="view-section bg-background text-on-surface min-h-screen flex flex-col font-body-md tech-grid-bg pt-[80px]">
+        <!-- Main Content Canvas -->
+        <main class="flex-grow container mx-auto px-margin-mobile md:px-margin-desktop py-8 mb-24 max-w-7xl relative">
+            <!-- Header Section -->
+            <div class="mb-8 border-b border-outline-variant/30 pb-4 relative">
+                <div class="absolute right-0 top-0 text-outline-variant/50 font-data-mono text-data-mono select-none">Z: 0.00</div>
+                <h1 class="font-headline-lg text-headline-lg md:font-display-lg md:text-display-lg mb-2">Estado de Resultados</h1>
+                <p class="text-on-surface-variant font-data-mono text-data-mono flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">calendar_today</span> Q3 2023 vs Q2 2023
+                </p>
+            </div>
+
+            <!-- Bento Grid Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+                <!-- Key Metrics Overview (KPIs) -->
+                <section class="col-span-1 md:col-span-12 grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                    <!-- KPI Card 1 -->
+                    <div class="bg-surface-container border border-outline-variant/30 rounded p-6 relative overflow-hidden group hover:border-primary/50 transition-colors">
+                        <div class="absolute inset-0 bg-[radial-gradient(#434656_1px,transparent_1px)] [background-size:10px_10px] opacity-20"></div>
+                        <div class="relative z-10">
+                            <h3 class="font-label-caps text-label-caps text-on-surface-variant mb-4 uppercase tracking-widest">Ingresos Brutos</h3>
+                            <div class="font-data-mono text-data-mono text-3xl font-bold mb-2">$1,245,000.00</div>
+                            <div class="flex items-center gap-2 font-data-mono text-data-mono text-sm">
+                                <span class="material-symbols-outlined text-secondary text-sm">trending_up</span>
+                                <span class="text-secondary">+12.4%</span>
+                                <span class="text-outline-variant">vs previo</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- KPI Card 2 -->
+                    <div class="bg-surface-container border border-outline-variant/30 rounded p-6 relative overflow-hidden group hover:border-primary/50 transition-colors">
+                        <div class="absolute inset-0 bg-[radial-gradient(#434656_1px,transparent_1px)] [background-size:10px_10px] opacity-20"></div>
+                        <div class="relative z-10">
+                            <h3 class="font-label-caps text-label-caps text-on-surface-variant mb-4 uppercase tracking-widest">Gastos Operativos</h3>
+                            <div class="font-data-mono text-data-mono text-3xl font-bold mb-2">$428,500.00</div>
+                            <div class="flex items-center gap-2 font-data-mono text-data-mono text-sm">
+                                <span class="material-symbols-outlined text-error text-sm">trending_up</span>
+                                <span class="text-error">+5.2%</span>
+                                <span class="text-outline-variant">vs previo</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- KPI Card 3 -->
+                    <div class="bg-primary/5 border border-primary/30 rounded p-6 relative overflow-hidden group hover:border-primary/60 transition-colors glow-active">
+                        <div class="absolute inset-0 bg-[radial-gradient(#b6c4ff_1px,transparent_1px)] [background-size:10px_10px] opacity-10"></div>
+                        <div class="relative z-10">
+                            <h3 class="font-label-caps text-label-caps text-primary mb-4 uppercase tracking-widest">Utilidad Neta</h3>
+                            <div class="font-data-mono text-data-mono text-3xl font-bold text-primary mb-2">$816,500.00</div>
+                            <div class="flex items-center gap-2 font-data-mono text-data-mono text-sm text-primary/80">
+                                <span class="material-symbols-outlined text-sm">arrow_upward</span>
+                                <span>+16.8%</span>
+                                <span class="text-primary/50">vs previo</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Detailed Technical Table -->
+                <section class="col-span-1 md:col-span-8 bg-surface-container border border-outline-variant/30 rounded flex flex-col">
+                    <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center bg-surface-container-high/50">
+                        <h2 class="font-label-caps text-label-caps text-on-surface uppercase">Desglose Técnico Financiero</h2>
+                        <span class="material-symbols-outlined text-outline-variant">table_chart</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-outline-variant/30 font-label-caps text-label-caps text-on-surface-variant uppercase bg-surface-container-lowest/50">
+                                    <th class="p-4 font-normal">Concepto</th>
+                                    <th class="p-4 font-normal text-right">Q3 2023</th>
+                                    <th class="p-4 font-normal text-right">Q2 2023</th>
+                                    <th class="p-4 font-normal text-right">Var %</th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-data-mono text-data-mono text-sm divide-y divide-outline-variant/10">
+                                <!-- Ingresos Block -->
+                                <tr class="hover:bg-surface-variant/20 transition-colors">
+                                    <td class="p-4 pl-4 font-bold text-on-surface">Ventas 3D Print</td>
+                                    <td class="p-4 text-right text-on-surface">$850,000</td>
+                                    <td class="p-4 text-right text-on-surface-variant">$750,000</td>
+                                    <td class="p-4 text-right text-secondary">+13.3%</td>
+                                </tr>
+                                <tr class="hover:bg-surface-variant/20 transition-colors">
+                                    <td class="p-4 pl-8 text-on-surface-variant">Ventas Filamento</td>
+                                    <td class="p-4 text-right text-on-surface">$200,000</td>
+                                    <td class="p-4 text-right text-on-surface-variant">$180,000</td>
+                                    <td class="p-4 text-right text-secondary">+11.1%</td>
+                                </tr>
+                                <tr class="hover:bg-surface-variant/20 transition-colors">
+                                    <td class="p-4 pl-8 text-on-surface-variant">Servicios Diseño</td>
+                                    <td class="p-4 text-right text-on-surface">$195,000</td>
+                                    <td class="p-4 text-right text-on-surface-variant">$177,000</td>
+                                    <td class="p-4 text-right text-secondary">+10.2%</td>
+                                </tr>
+                                <tr class="bg-surface-container-highest/30 border-y border-outline-variant/30">
+                                    <td class="p-4 font-bold text-on-surface uppercase font-label-caps text-label-caps">Total Ingresos</td>
+                                    <td class="p-4 text-right font-bold text-on-surface">$1,245,000</td>
+                                    <td class="p-4 text-right text-on-surface-variant">$1,107,000</td>
+                                    <td class="p-4 text-right text-secondary font-bold">+12.4%</td>
+                                </tr>
+                                <!-- Gastos Block -->
+                                <tr class="hover:bg-surface-variant/20 transition-colors">
+                                    <td class="p-4 pl-4 font-bold text-on-surface mt-2">Costo Materiales</td>
+                                    <td class="p-4 text-right text-on-surface">-$180,500</td>
+                                    <td class="p-4 text-right text-on-surface-variant">-$170,000</td>
+                                    <td class="p-4 text-right text-error">+6.1%</td>
+                                </tr>
+                                <tr class="hover:bg-surface-variant/20 transition-colors">
+                                    <td class="p-4 pl-8 text-on-surface-variant">Mantenimiento Eq.</td>
+                                    <td class="p-4 text-right text-on-surface">-$45,000</td>
+                                    <td class="p-4 text-right text-on-surface-variant">-$42,000</td>
+                                    <td class="p-4 text-right text-error">+7.1%</td>
+                                </tr>
+                                <tr class="hover:bg-surface-variant/20 transition-colors">
+                                    <td class="p-4 pl-8 text-on-surface-variant">Gastos Operativos</td>
+                                    <td class="p-4 text-right text-on-surface">-$203,000</td>
+                                    <td class="p-4 text-right text-on-surface-variant">-$195,500</td>
+                                    <td class="p-4 text-right text-error">+3.8%</td>
+                                </tr>
+                                <tr class="bg-surface-container-highest/30 border-y border-outline-variant/30">
+                                    <td class="p-4 font-bold text-on-surface uppercase font-label-caps text-label-caps">Total Gastos</td>
+                                    <td class="p-4 text-right font-bold text-on-surface">-$428,500</td>
+                                    <td class="p-4 text-right text-on-surface-variant">-$407,500</td>
+                                    <td class="p-4 text-right text-error font-bold">+5.2%</td>
+                                </tr>
+                                <!-- Net Block -->
+                                <tr class="bg-primary/5 border-b-2 border-primary/50">
+                                    <td class="p-4 font-bold text-primary uppercase font-label-caps text-label-caps">Utilidad Neta</td>
+                                    <td class="p-4 text-right font-bold text-primary text-lg">$816,500</td>
+                                    <td class="p-4 text-right text-primary/70">$699,500</td>
+                                    <td class="p-4 text-right text-primary font-bold">+16.8%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Contextual Sidebar/Visuals -->
+                <section class="col-span-1 md:col-span-4 flex flex-col gap-4">
+                    <!-- Status Box -->
+                    <div class="bg-surface-container border border-outline-variant/30 rounded p-4 relative">
+                        <div class="absolute top-2 right-2 flex gap-1">
+                            <span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+                            <span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+                        </div>
+                        <h3 class="font-label-caps text-label-caps text-on-surface-variant mb-3 uppercase">Estado de Exportación</h3>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-data-mono text-data-mono text-sm">Generando Reporte...</span>
+                            <span class="font-data-mono text-data-mono text-sm text-primary">100%</span>
+                        </div>
+                        <div class="w-full bg-surface-variant h-2 rounded-full overflow-hidden flex">
+                            <div class="h-full bg-primary w-1/4 border-r border-background"></div>
+                            <div class="h-full bg-primary w-1/4 border-r border-background"></div>
+                            <div class="h-full bg-primary w-1/4 border-r border-background"></div>
+                            <div class="h-full bg-primary w-1/4"></div>
+                        </div>
+                        <div class="mt-4 flex gap-2">
+                            <button onclick="exportFinancialReportPDF()" class="flex-1 bg-primary text-on-primary font-label-caps text-label-caps py-2 px-4 rounded hover:bg-primary-fixed transition-colors text-center uppercase tracking-wider">
+                                Descargar PDF
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Graphic Placeholder -->
+                    <div class="bg-surface-container border border-outline-variant/30 rounded h-48 relative overflow-hidden flex items-center justify-center group">
+                        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#8A909A_1px,transparent_1px)] [background-size:8px_8px]"></div>
+                        <span class="material-symbols-outlined text-4xl text-outline-variant/50 group-hover:text-primary/50 transition-colors z-10">monitoring</span>
+                        <div class="absolute bottom-2 right-2 font-data-mono text-data-mono text-[10px] text-outline-variant/50">CHART_VIEW_XY</div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 6. FLUJO DE CAJA VIEW (Exact interface from JSON/Prompt) -->
+    <!-- ========================================================================= -->
+    <section id="view-flujo" class="view-section bg-background text-on-background font-body-md min-h-screen flex flex-col bg-cyber-grid pb-24 md:pb-0 pt-[80px]">
+        <!-- Main Content Canvas -->
+        <main class="flex-grow w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-8 grid grid-cols-1 md:grid-cols-12 gap-gutter">
+            <!-- Header Section -->
+            <div class="col-span-1 md:col-span-12 mb-4 border-b border-outline-variant/20 pb-4 relative">
+                <div class="absolute top-0 right-0 font-data-mono text-data-mono text-outline-variant text-[10px]">X:499 Y:120</div>
+                <h2 class="font-headline-md text-headline-md text-on-surface">Análisis de Flujo de Caja</h2>
+                <p class="font-body-md text-body-md text-on-surface-variant mt-1">Proyección a 30 días basada en contratos activos de impresión 3D.</p>
+            </div>
+
+            <!-- Summary KPIs (Bento Top) -->
+            <div class="col-span-1 md:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-base">
+                <!-- Saldo Actual -->
+                <div class="bg-[#1C1D21] border border-outline-variant/20 rounded-lg p-6 relative overflow-hidden group">
+                    <div class="absolute -right-4 -top-4 text-outline-variant/10 group-hover:text-primary/10 transition-colors">
+                        <span class="material-symbols-outlined text-[120px]">account_balance_wallet</span>
+                    </div>
+                    <div class="font-label-caps text-label-caps text-on-surface-variant mb-2">SALDO ACTUAL (Z-AXIS)</div>
+                    <div class="font-display-lg text-display-lg text-on-surface">$42,500.00</div>
+                    <div class="mt-4 inline-flex items-center gap-1 bg-primary/10 border border-primary text-primary px-2 py-1 rounded text-[10px] font-label-caps">
+                        <span class="material-symbols-outlined text-[14px]">trending_up</span>
+                        ESTABLE
+                    </div>
+                </div>
+                <!-- Ingresos Proyectados -->
+                <div class="bg-[#1C1D21] border border-outline-variant/20 rounded-lg p-6 relative overflow-hidden group">
+                    <div class="font-label-caps text-label-caps text-on-surface-variant mb-2">ENTRADAS PROYECTADAS (30D)</div>
+                    <div class="font-display-lg text-display-lg text-primary">+$18,200.00</div>
+                    <div class="mt-4 flex flex-col gap-1">
+                        <div class="flex justify-between font-data-mono text-data-mono text-[12px] text-on-surface-variant">
+                            <span>Contratos SLA</span>
+                            <span class="text-on-surface">$12,000</span>
+                        </div>
+                        <div class="w-full bg-surface-container-high h-1 rounded-full overflow-hidden">
+                            <div class="bg-primary h-full w-[65%]"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Gastos Proyectados -->
+                <div class="bg-[#1C1D21] border border-outline-variant/20 rounded-lg p-6 relative overflow-hidden group">
+                    <div class="font-label-caps text-label-caps text-on-surface-variant mb-2">SALIDAS PROYECTADAS (30D)</div>
+                    <div class="font-display-lg text-display-lg text-secondary-container">-$9,450.00</div>
+                    <div class="mt-4 flex flex-col gap-1">
+                        <div class="flex justify-between font-data-mono text-data-mono text-[12px] text-on-surface-variant">
+                            <span>Materia Prima (Resina)</span>
+                            <span class="text-on-surface">$5,200</span>
+                        </div>
+                        <div class="w-full bg-surface-container-high h-1 rounded-full overflow-hidden">
+                            <div class="bg-secondary-container h-full w-[55%]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart Section (Canvas) -->
+            <div class="col-span-1 md:col-span-8 bg-[#1C1D21] border border-outline-variant/20 rounded-lg p-6 relative min-h-[400px] flex flex-col">
+                <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9IiM4QTkwOUEiIGZpbGwtb3BhY2l0eT0iMC4yIi8+PC9zdmc+')] opacity-50 z-0 pointer-events-none"></div>
+                <div class="flex justify-between items-center mb-6 z-10 relative">
+                    <div class="font-label-caps text-label-caps text-on-surface">TRAYECTORIA DE FLUJO (EJES X/T)</div>
+                    <div class="flex gap-2">
+                        <button id="btn-chart-7d" onclick="filterCashflowChart('7D')" class="chart-filter-btn bg-surface-variant/50 border border-outline-variant/50 text-on-surface-variant font-label-caps text-[10px] px-3 py-1 rounded hover:border-primary hover:text-primary transition-colors">7D</button>
+                        <button id="btn-chart-30d" onclick="filterCashflowChart('30D')" class="chart-filter-btn bg-primary/20 border border-primary text-primary font-label-caps text-[10px] px-3 py-1 rounded transition-colors shadow-[0_0_8px_rgba(182,196,255,0.2)]">30D</button>
+                        <button id="btn-chart-90d" onclick="filterCashflowChart('90D')" class="chart-filter-btn bg-surface-variant/50 border border-outline-variant/50 text-on-surface-variant font-label-caps text-[10px] px-3 py-1 rounded hover:border-primary hover:text-primary transition-colors">90D</button>
+                    </div>
+                </div>
+
+                <!-- Simulated SVG Chart -->
+                <div class="flex-grow w-full relative z-10">
+                    <svg id="cashflow-svg-chart" class="w-full h-full preserve-3d" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));" viewBox="0 0 800 300">
+                        <!-- Loaded by charts.js -->
+                    </svg>
+                </div>
+                <div class="absolute bottom-4 right-6 bg-surface-container-high border border-outline-variant/30 px-3 py-2 rounded text-[10px] font-data-mono text-on-surface-variant flex gap-4 z-10">
+                    <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary inline-block"></span> Histórico</div>
+                    <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary/50 border border-primary border-dashed inline-block"></span> Proyección</div>
+                </div>
+            </div>
+
+            <!-- Upcoming Transactions List -->
+            <div class="col-span-1 md:col-span-4 flex flex-col gap-4">
+                <h3 class="font-label-caps text-label-caps text-on-surface border-b border-outline-variant/20 pb-2">VECTORES PROGRAMADOS</h3>
+                <div id="cashflow-vectors-container" class="flex flex-col gap-2">
+                    <!-- Populated by app.js -->
+                </div>
+                <button onclick="appRouter.navigate('ingresos')" class="w-full mt-2 border border-outline-variant/50 text-on-surface-variant font-label-caps py-3 rounded hover:bg-surface-variant/20 hover:text-on-surface transition-colors">
+                    VER HISTORIAL COMPLETO
+                </button>
+            </div>
+        </main>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- BOTTOM NAVBAR (Mobile Only - Exact match from template) -->
+    <!-- ========================================================================= -->
+    <nav id="mobile-bottom-nav" class="hidden md:hidden docked full-width bottom-0 border-t border-outline-variant/20 flat no shadows fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-surface-container-low dark:bg-surface-container-low">
+        <!-- Dashboard -->
+        <button data-nav="dashboard" class="mobile-nav-item flex flex-col items-center justify-center text-primary bg-primary/10 rounded-lg py-1 px-2 ring-1 ring-primary/40 transition-all">
+            <span class="material-symbols-outlined text-[24px]">dashboard</span>
+            <span class="font-label-caps text-label-caps mt-1 text-[10px]">Dashboard</span>
+        </button>
+        <!-- Ingresos -->
+        <button data-nav="ingresos" class="mobile-nav-item flex flex-col items-center justify-center text-on-surface-variant py-1 px-2 hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[24px]">payments</span>
+            <span class="font-label-caps text-label-caps mt-1 text-[10px]">Ingresos</span>
+        </button>
+        <!-- Gastos -->
+        <button data-nav="gastos" class="mobile-nav-item flex flex-col items-center justify-center text-on-surface-variant py-1 px-2 hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[24px]">account_balance_wallet</span>
+            <span class="font-label-caps text-label-caps mt-1 text-[10px]">Gastos</span>
+        </button>
+        <!-- Estado -->
+        <button data-nav="estado" class="mobile-nav-item flex flex-col items-center justify-center text-on-surface-variant py-1 px-2 hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[24px]">analytics</span>
+            <span class="font-label-caps text-label-caps mt-1 text-[10px]">Estado</span>
+        </button>
+        <!-- Flujo -->
+        <button data-nav="flujo" class="mobile-nav-item flex flex-col items-center justify-center text-on-surface-variant py-1 px-2 hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[24px]">account_tree</span>
+            <span class="font-label-caps text-label-caps mt-1 text-[10px]">Flujo</span>
+        </button>
+    </nav>
+
+    <!-- ========================================================================= -->
+    <!-- MODALS -->
+    <!-- ========================================================================= -->
+    <!-- Modal: Add Income -->
+    <div id="modal-add-income" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+        <div class="bg-surface-container border border-primary/40 rounded-lg max-w-lg w-full p-6 shadow-2xl relative glow-active">
+            <div class="flex justify-between items-center border-b border-outline-variant/30 pb-3 mb-4">
+                <div class="flex items-center gap-2 text-primary font-headline-md text-headline-md">
+                    <span class="material-symbols-outlined">add_circle</span>
+                    <h3>Registrar Nuevo Ingreso</h3>
+                </div>
+                <button onclick="closeModal('modal-add-income')" class="text-outline hover:text-on-surface">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <form id="modal-form-income" class="flex flex-col gap-4">
+                <div>
+                    <label class="font-label-caps text-[11px] text-on-surface-variant uppercase mb-1 block">Concepto / Proyecto</label>
+                    <input id="modal-inc-concept" required type="text" placeholder="Ej: Fabricación Carcasa Drone SLA" class="w-full bg-surface-dim border border-outline-variant rounded p-2.5 text-on-surface font-body-md focus:border-primary outline-none"/>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="font-label-caps text-[11px] text-on-surface-variant uppercase mb-1 block">Monto (USD)</label>
+                        <input id="modal-inc-amount" required step="0.01" min="0.01" type="number" placeholder="1500.00" class="w-full bg-surface-dim border border-outline-variant rounded p-2.5 text-on-surface font-data-mono focus:border-primary outline-none"/>
+                    </div>
+                    <div>
+                        <label class="font-label-caps text-[11px] text-on-surface-variant uppercase mb-1 block">Categoría</label>
+                        <select id="modal-inc-category" class="w-full bg-surface-dim border border-outline-variant rounded p-2.5 text-on-surface focus:border-primary outline-none">
+                            <option value="Impresión 3D">Impresión 3D</option>
+                            <option value="Filamentos">Filamentos (Venta)</option>
+                            <option value="Diseño">Servicios de Diseño</option>
+                            <option value="Otros">Otros</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 mt-4 pt-3 border-t border-outline-variant/20">
+                    <button type="button" onclick="closeModal('modal-add-income')" class="px-4 py-2 border border-outline text-outline-variant hover:text-on-surface font-label-caps text-xs rounded">
+                        CANCELAR
+                    </button>
+                    <button type="submit" class="px-5 py-2 bg-primary text-on-primary font-label-caps text-xs rounded hover:bg-primary-container transition-all glow-active">
+                        CONFIRMAR REGISTRO
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Add Expense -->
+    <div id="modal-add-expense" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+        <div class="bg-surface-container border border-secondary-container/40 rounded-lg max-w-lg w-full p-6 shadow-2xl relative industrial-glow">
+            <div class="flex justify-between items-center border-b border-outline-variant/30 pb-3 mb-4">
+                <div class="flex items-center gap-2 text-secondary-container font-headline-md text-headline-md">
+                    <span class="material-symbols-outlined">remove_circle</span>
+                    <h3>Registrar Gasto / Compra</h3>
+                </div>
+                <button onclick="closeModal('modal-add-expense')" class="text-outline hover:text-on-surface">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <form id="modal-form-expense" class="flex flex-col gap-4">
+                <div>
+                    <label class="font-label-caps text-[11px] text-on-surface-variant uppercase mb-1 block">Concepto / Ítem</label>
+                    <input id="modal-exp-concept" required type="text" placeholder="Ej: Bobinas Filamento Tough PLA" class="w-full bg-surface-dim border border-outline-variant rounded p-2.5 text-on-surface font-body-md focus:border-secondary-container outline-none"/>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="font-label-caps text-[11px] text-on-surface-variant uppercase mb-1 block">Monto (USD)</label>
+                        <input id="modal-exp-amount" required step="0.01" min="0.01" type="number" placeholder="450.00" class="w-full bg-surface-dim border border-outline-variant rounded p-2.5 text-on-surface font-data-mono focus:border-secondary-container outline-none"/>
+                    </div>
+                    <div>
+                        <label class="font-label-caps text-[11px] text-on-surface-variant uppercase mb-1 block">Proveedor</label>
+                        <input id="modal-exp-provider" type="text" placeholder="Ej: PolyMaker / Formlabs" class="w-full bg-surface-dim border border-outline-variant rounded p-2.5 text-on-surface focus:border-secondary-container outline-none"/>
+                    </div>
+                </div>
+                <div>
+                    <label class="font-label-caps text-[11px] text-on-surface-variant uppercase mb-1 block">Categoría de Gasto</label>
+                    <select id="modal-exp-category" class="w-full bg-surface-dim border border-outline-variant rounded p-2.5 text-on-surface focus:border-secondary-container outline-none">
+                        <option value="Materiales">Materiales e Insumos</option>
+                        <option value="Mantenimiento">Mantenimiento de Equipos</option>
+                        <option value="Operativo">Gastos Operativos / Envíos</option>
+                        <option value="Nómina">Nómina y Servicios</option>
+                    </select>
+                </div>
+                <div class="flex justify-end gap-3 mt-4 pt-3 border-t border-outline-variant/20">
+                    <button type="button" onclick="closeModal('modal-add-expense')" class="px-4 py-2 border border-outline text-outline-variant hover:text-on-surface font-label-caps text-xs rounded">
+                        CANCELAR
+                    </button>
+                    <button type="submit" class="px-5 py-2 bg-secondary-container text-on-secondary-container font-label-caps text-xs rounded hover:bg-secondary-container/90 transition-all industrial-glow">
+                        GUARDAR GASTO
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts Module Loading -->
+    <script src="js/store.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

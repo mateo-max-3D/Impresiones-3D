@@ -1,0 +1,15 @@
+# Ignorar archivos del sistema y cache
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Editor files
+.vscode/
+.idea/
+
+# Node (si se agrega en el futuro)
+node_modules/
